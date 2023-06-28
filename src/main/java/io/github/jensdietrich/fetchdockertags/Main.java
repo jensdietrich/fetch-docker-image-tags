@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 public class Main {
 
 
-    public static final Set<String> VARIANTS = Set.of("jammy","focal","centos","ubi9-minimal");
+    public static final Set<String> VARIANTS = Set.of("jammy","focal","centos","ubi9-minimal","buster","slim","stretch","oracle","sid","alpine","bullseye","bookworm","jessie");
 
-    public static final Predicate<Tag> NOT_LATEST = tag -> !tag.getName().equals("latest");
+    public static final Predicate<Tag> NO_LATEST = tag -> !tag.getName().equals("latest");
     public static final Predicate<Tag> LINUX = tag -> tag.supportsOS("linux");
     public static final Predicate<Tag> ARM64 = tag -> tag.supportsArchitecture("arm64");
     public static final Predicate<Tag> JDK = tag -> tag.getName().toLowerCase().contains("jdk");
@@ -30,9 +30,17 @@ public class Main {
         }
         return true;
     };
+    public static final Predicate<Tag> NO_EA = tag -> !tag.getName().contains("-ea-");
+    public static final Predicate<Tag> NO_EXPERIMENTAL = tag -> !tag.getName().contains("experimental");
 
-
-    public static final Predicate<Tag> ALL = NOT_LATEST.and(LINUX).and(ARM64).and(JDK).and(NO_VARIANT);
+    public static final Predicate<Tag> ALL = NO_LATEST
+        .and(LINUX)
+        .and(ARM64)
+        .and(JDK)
+        .and(NO_VARIANT)
+        .and(NO_EA)
+        .and(NO_EXPERIMENTAL)
+        ;
 
 
     public static void main(String[] args) throws IOException {
